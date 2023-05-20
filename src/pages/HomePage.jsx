@@ -58,8 +58,6 @@ export const HomePage = () => {
           debouncedSearch
         );
 
-        console.log(products);
-
         setShowedProducts(products);
       } catch (error) {
         console.log(error);
