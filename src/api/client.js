@@ -22,6 +22,24 @@ export const getProduct = async (id) => {
   }
 };
 
+export const getProductsByCategories = async (
+  category,
+  ratingFilter,
+  minPrice,
+  maxPrice,
+  debouncedSearch
+) => {
+  try {
+    const response = await fetch(
+      `${API_URL}products/?category=${category}&ratingFilter=${ratingFilter}&minPrice=${minPrice}&maxPrice=${maxPrice}&search=${debouncedSearch}`
+    );
+
+    return await response.json();
+  } catch (e) {
+    throw new ClientError(e.message);
+  }
+};
+
 export const getGoogleApiKey = async () => {
   try {
     const response = await fetch(`${API_URL}api-keys/google`);

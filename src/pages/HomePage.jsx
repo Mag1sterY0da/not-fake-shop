@@ -2,6 +2,7 @@ import { Container } from '@mui/material';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { getProductsByCategories } from '../api/client';
 import Filters from '../components/Filters';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Products from '../components/Products';
@@ -49,13 +50,15 @@ export const HomePage = () => {
   useEffect(() => {
     (async () => {
       try {
-        const response = await fetch(
-          `http://localhost:3000/products?category=${values.category}&ratingFilter=${values.ratingFilter}&minPrice=${values.minPrice}&maxPrice=${values.maxPrice}&search=${debouncedSearch}`
+        const products = await getProductsByCategories(
+          values.category,
+          values.ratingFilter,
+          values.minPrice,
+          values.maxPrice,
+          debouncedSearch
         );
 
-        const data = await response.json();
-
-        setShowedProducts(data);
+        setShowedProducts(products);
       } catch (error) {
         console.log(error);
       }
