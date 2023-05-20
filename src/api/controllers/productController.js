@@ -26,7 +26,7 @@ export const getProducts = (req, res) => {
     filters.title = { $regex: search, $options: 'i' };
   }
 
-  Product.find()
+  Product.find(filters)
     .then((products) => {
       res.json(products);
     })

@@ -30,6 +30,9 @@ export const getProductsByCategories = async (
   debouncedSearch
 ) => {
   try {
+    console.log(
+      `${API_URL}products/?category=${category}&ratingFilter=${ratingFilter}&minPrice=${minPrice}&maxPrice=${maxPrice}&search=${debouncedSearch}`
+    );
     const response = await fetch(
       `${API_URL}products/?category=${category}&ratingFilter=${ratingFilter}&minPrice=${minPrice}&maxPrice=${maxPrice}&search=${debouncedSearch}`
     );
