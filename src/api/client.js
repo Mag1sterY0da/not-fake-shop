@@ -1,6 +1,6 @@
 import { ClientError } from './errors/clientError';
 
-const API_URL = 'http://localhost:3000/';
+const API_URL = 'https://not-fake-shop-backend.onrender.com/';
 
 export const getProducts = async () => {
   try {
