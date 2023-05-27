@@ -16,6 +16,7 @@ import CardMedia from "@mui/material/CardMedia";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { useNavigate, useParams } from "react-router-dom";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { useProductQuery } from "../hooks/data/useProductQuery";
 import { useCart } from "../hooks/useCart";
 import { usePageTitle } from "../hooks/usePageTitle";
@@ -36,11 +37,13 @@ const ProductPage = () => {
 
   const navigate = useNavigate();
 
-  const { data: prod } = useProductQuery(id);
+  const { data: prod, isLoading } = useProductQuery(id);
   const { isInCart, addToCart } = useCart();
   const { isInWish, toggleWish } = useWishList();
 
   usePageTitle(prod?.title);
+
+  if (!prod || isLoading) return <LoadingSpinner />;
 
   return (
     <Container maxWidth='xl' sx={{ height: "calc(100vh - 64px)" }}>
