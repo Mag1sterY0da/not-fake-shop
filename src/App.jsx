@@ -9,7 +9,6 @@ import HomePage from './pages/HomePage';
 import ProductPage from './pages/ProductPage';
 import SuccessOrderPage from './pages/SuccessOrderPage';
 import WishPage from './pages/WishPage';
-import ScrollToTop from './utils/ScrollToTop';
 
 const theme = createTheme({
   palette: {
@@ -32,7 +31,6 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-        <ScrollToTop />
         <Header />
         <Routes>
           <Route path='/' element={<HomePage />} />

@@ -4,7 +4,7 @@ import { memo } from 'react';
 
 const RatingFilter = memo(({ ratingFilter, handleChange }) => {
   return (
-    <Grid item xs={12} sm={3}>
+    <Grid item xs={12} sm={6} md={3}>
       <FormControl fullWidth>
         <FormControlLabel
           control={<Checkbox checked={ratingFilter} onChange={handleChange} />}

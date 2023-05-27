@@ -1,18 +1,19 @@
 import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
 import { memo } from 'react';
-import { useCategoriesQuery } from '../hooks/data/useCategoriesQuery';
 import CategorySelect from './Inputs/CategorySelect';
 import PriceInput from './Inputs/PriceInput';
 import RatingFilter from './Inputs/RatingFilter';
 
 const Filters = memo(
-  ({ minPrice, maxPrice, category, ratingFilter, handleChange }) => {
-    const { data: categories, isLoading: isCategoriesLoading } =
-      useCategoriesQuery();
-
-    if (!categories || isCategoriesLoading) return null;
-
+  ({
+    categories,
+    minPrice,
+    maxPrice,
+    category,
+    ratingFilter,
+    handleChange,
+  }) => {
     return (
       <Grid container spacing={3} alignItems='center' sx={{ mt: '1.2rem' }}>
         <PriceInput
@@ -42,6 +43,7 @@ const Filters = memo(
 );
 
 Filters.propTypes = {
+  categories: PropTypes.array,
   minPrice: PropTypes.string,
   maxPrice: PropTypes.string,
   category: PropTypes.string,

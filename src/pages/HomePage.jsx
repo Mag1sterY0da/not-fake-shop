@@ -92,6 +92,20 @@ export const HomePage = () => {
     values.search,
   ]);
 
+  const setScrollPosition = () => {
+    sessionStorage.setItem('scrollPosition', window.scrollY);
+  };
+
+  useEffect(() => {
+    if (showedProducts.length !== 0) {
+      const savedScrollPosition = sessionStorage.getItem('scrollPosition');
+      const scrollPosition = savedScrollPosition
+        ? parseInt(savedScrollPosition)
+        : 0;
+      window.scrollTo(0, scrollPosition);
+    }
+  }, [showedProducts]);
+
   if (
     !products ||
     isProductsLoading ||
@@ -103,19 +117,27 @@ export const HomePage = () => {
 
   return (
     <Container maxWidth='xl'>
-      <Search
-        search={values.search}
-        handleChange={handleChange}
-        onSubmit={onSubmit}
-      />
-      <Filters
-        minPrice={values.minPrice.toString()}
-        maxPrice={values.maxPrice.toString()}
-        category={values.category}
-        ratingFilter={values.ratingFilter}
-        handleChange={handleChange}
-      />
-      <Products products={showedProducts} />
+      {showedProducts.length !== 0 && (
+        <>
+          <Search
+            search={values.search}
+            handleChange={handleChange}
+            onSubmit={onSubmit}
+          />
+          <Filters
+            categories={categories}
+            minPrice={values.minPrice.toString()}
+            maxPrice={values.maxPrice.toString()}
+            category={values.category}
+            ratingFilter={values.ratingFilter}
+            handleChange={handleChange}
+          />
+          <Products
+            products={showedProducts}
+            setScrollPosition={setScrollPosition}
+          />
+        </>
+      )}
     </Container>
   );
 };

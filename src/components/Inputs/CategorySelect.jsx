@@ -4,7 +4,7 @@ import { memo } from 'react';
 
 const CategorySelect = memo(({ category, handleChange, categories }) => {
   return (
-    <Grid item xs={12} sm={3}>
+    <Grid item xs={12} sm={6} md={3}>
       <FormControl fullWidth>
         <InputLabel id='category-select-label'>Category</InputLabel>
         <Select

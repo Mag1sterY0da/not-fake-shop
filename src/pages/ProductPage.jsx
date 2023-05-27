@@ -21,6 +21,7 @@ import { useProductQuery } from '../hooks/data/useProductQuery';
 import { useCart } from '../hooks/useCart';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { useWishList } from '../hooks/useWishList';
+import ScrollToTop from '../utils/ScrollToTop';
 
 const useStyles = () => ({
   media: {
@@ -47,6 +48,7 @@ const ProductPage = () => {
 
   return (
     <Container maxWidth='xl' height='calc(100vh)'>
+      <ScrollToTop />
       <Box
         sx={{
           display: 'flex',

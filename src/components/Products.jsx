@@ -24,7 +24,7 @@ const useStyles = () => ({
   },
 });
 
-const Products = memo(({ products }) => {
+const Products = memo(({ products, setScrollPosition }) => {
   const styles = useStyles();
   const theme = useTheme();
   const navigate = useNavigate();
@@ -49,7 +49,11 @@ const Products = memo(({ products }) => {
               boxShadow: 2,
             }}
           >
-            <Link to={`/products/${prod._id}`} style={theme.links.primary}>
+            <Link
+              to={`/products/${prod._id}`}
+              style={theme.links.primary}
+              onClick={() => setScrollPosition(window.scrollY)}
+            >
               <Box
                 sx={{
                   position: 'absolute',
@@ -184,6 +188,7 @@ const Products = memo(({ products }) => {
 
 Products.propTypes = {
   products: PropTypes.array.isRequired,
+  setScrollPosition: PropTypes.func.isRequired,
 };
 
 Products.displayName = 'Products';

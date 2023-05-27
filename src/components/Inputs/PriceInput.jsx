@@ -11,7 +11,7 @@ import { memo } from 'react';
 
 const PriceInput = memo(({ label, value, placeholder, handleChange }) => {
   return (
-    <Grid item xs={12} sm={3}>
+    <Grid item xs={12} md={3}>
       <FormControl fullWidth>
         <TextField
           label={label}
