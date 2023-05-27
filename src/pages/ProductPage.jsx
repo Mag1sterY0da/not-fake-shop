@@ -1,7 +1,7 @@
-import { ArrowBackIos, ShoppingCartCheckout } from "@mui/icons-material";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { ArrowBackIos, ShoppingCartCheckout } from '@mui/icons-material';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {
   Box,
   Button,
@@ -9,25 +9,25 @@ import {
   Chip,
   Container,
   Rating,
-} from "@mui/material";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import { useNavigate, useParams } from "react-router-dom";
-import LoadingSpinner from "../components/LoadingSpinner";
-import { useProductQuery } from "../hooks/data/useProductQuery";
-import { useCart } from "../hooks/useCart";
-import { usePageTitle } from "../hooks/usePageTitle";
-import { useWishList } from "../hooks/useWishList";
+} from '@mui/material';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import { useNavigate, useParams } from 'react-router-dom';
+import LoadingSpinner from '../components/LoadingSpinner';
+import { useProductQuery } from '../hooks/data/useProductQuery';
+import { useCart } from '../hooks/useCart';
+import { usePageTitle } from '../hooks/usePageTitle';
+import { useWishList } from '../hooks/useWishList';
 
 const useStyles = () => ({
   media: {
-    height: "60vh",
-    backgroundSize: "contain",
-    backgroundPosition: "center",
-    m: "2rem",
+    height: '60vh',
+    backgroundSize: 'contain',
+    backgroundPosition: 'center',
+    m: '2rem',
   },
 });
 
@@ -41,6 +41,8 @@ const ProductPage = () => {
   const { isInCart, addToCart } = useCart();
   const { isInWish, toggleWish } = useWishList();
 
+  console.log(prod, isLoading);
+
   usePageTitle(prod?.title);
 
   if (!prod || isLoading) return <LoadingSpinner />;
@@ -49,27 +51,27 @@ const ProductPage = () => {
     <Container maxWidth='xl'>
       <Box
         sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-around",
-          my: { md: "auto" },
-          height: "90%",
-          flexDirection: { xs: "column", sm: "column", md: "row" },
-          gap: "2rem",
-          mt: { xs: "4rem", sm: "4rem", md: "0" },
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-around',
+          my: { md: 'auto' },
+          height: '90%',
+          flexDirection: { xs: 'column', sm: 'column', md: 'row' },
+          gap: '2rem',
+          mt: { xs: '4rem', sm: '4rem', md: '0' },
         }}
       >
-        <Box sx={{ flex: "1", mx: 2, width: "100%" }}>
+        <Box sx={{ flex: '1', mx: 2, width: '100%' }}>
           <CardMedia sx={styles.media} image={prod.image} alt={prod.title} />
         </Box>
-        <Box sx={{ flex: "1", width: "100%" }}>
+        <Box sx={{ flex: '1', width: '100%' }}>
           <Card>
             <CardContent>
               <Typography
                 gutterBottom
                 variant='h5'
                 component='h2'
-                sx={{ mb: "1rem" }}
+                sx={{ mb: '1rem' }}
               >
                 {prod.title}
               </Typography>
@@ -80,7 +82,7 @@ const ProductPage = () => {
                   prod.category.slice(1).toLowerCase()
                 }
                 color='primary'
-                sx={{ mb: "1rem" }}
+                sx={{ mb: '1rem' }}
               />
               <Typography variant='body1' color='text.secondary'>
                 {prod.description}
@@ -88,42 +90,42 @@ const ProductPage = () => {
               <Typography
                 variant='h6'
                 color='text.primary'
-                sx={{ mt: 2, mb: "0.8rem" }}
+                sx={{ mt: 2, mb: '0.8rem' }}
               >
                 Price: ${prod.price}
               </Typography>
               <Box
                 sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                  gap: "0.8rem",
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center',
+                  gap: '0.8rem',
                 }}
               >
                 <Rating
                   name='product-rating'
-                  sx={{ color: "primary.main" }}
-                  value={prod["rating"].rate}
+                  sx={{ color: 'primary.main' }}
+                  value={prod['rating'].rate}
                   precision={0.5}
                   readOnly
                 />
                 <Typography
                   variant='body1'
                   color='text.primary'
-                  sx={{ fontWeight: "bold" }}
+                  sx={{ fontWeight: 'bold' }}
                 >
-                  {prod["rating"].rate} stars
+                  {prod['rating'].rate} stars
                 </Typography>
                 <Typography variant='body2' color='text.secondary'>
-                  ({prod["rating"].count} reviews)
+                  ({prod['rating'].count} reviews)
                 </Typography>
               </Box>
             </CardContent>
             <CardActions
               sx={{
-                p: "0.8rem",
-                justifyContent: "space-between",
+                p: '0.8rem',
+                justifyContent: 'space-between',
               }}
             >
               <Box>
@@ -140,11 +142,11 @@ const ProductPage = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     isInCart(prod._id)
-                      ? navigate("/cart")
+                      ? navigate('/cart')
                       : addToCart(prod._id);
                   }}
                 >
-                  {isInCart(prod._id) ? "View in Cart" : "Add to cart"}
+                  {isInCart(prod._id) ? 'View in Cart' : 'Add to cart'}
                 </Button>
               </Box>
               <Button
@@ -159,15 +161,15 @@ const ProductPage = () => {
                 }}
               >
                 {isInWish(prod._id)
-                  ? "Remove from Wishlist"
-                  : "Add to Wishlist"}
+                  ? 'Remove from Wishlist'
+                  : 'Add to Wishlist'}
               </Button>
             </CardActions>
           </Card>
         </Box>
       </Box>
-      <Box sx={{ display: "flex", justifyContent: "center", my: "4.8rem" }}>
-        <IconButton onClick={() => navigate("/")} sx={{ mt: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', my: '4.8rem' }}>
+        <IconButton onClick={() => navigate('/')} sx={{ mt: 2 }}>
           <ArrowBackIos /> Continue Shopping
         </IconButton>
       </Box>
