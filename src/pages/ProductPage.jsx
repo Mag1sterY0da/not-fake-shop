@@ -41,14 +41,12 @@ const ProductPage = () => {
   const { isInCart, addToCart } = useCart();
   const { isInWish, toggleWish } = useWishList();
 
-  console.log(prod, isLoading);
-
   usePageTitle(prod?.title);
 
   if (!prod || isLoading) return <LoadingSpinner />;
 
   return (
-    <Container maxWidth='xl'>
+    <Container maxWidth='xl' height='calc(100vh)'>
       <Box
         sx={{
           display: 'flex',
@@ -58,7 +56,7 @@ const ProductPage = () => {
           height: '90%',
           flexDirection: { xs: 'column', sm: 'column', md: 'row' },
           gap: '2rem',
-          mt: { xs: '4rem', sm: '4rem', md: '0' },
+          pt: '4.8rem',
         }}
       >
         <Box sx={{ flex: '1', mx: 2, width: '100%' }}>
@@ -168,7 +166,7 @@ const ProductPage = () => {
           </Card>
         </Box>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', my: '4.8rem' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', py: '4.8rem' }}>
         <IconButton onClick={() => navigate('/')} sx={{ mt: 2 }}>
           <ArrowBackIos /> Continue Shopping
         </IconButton>
