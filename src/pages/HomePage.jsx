@@ -1,16 +1,16 @@
-import { Container } from '@mui/material';
-import { useFormik } from 'formik';
-import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { getProductsByCategories } from '../api/client';
-import Filters from '../components/Filters';
-import LoadingSpinner from '../components/LoadingSpinner';
-import Products from '../components/Products';
-import Search from '../components/Search';
-import { useCategoriesQuery } from '../hooks/data/useCategoriesQuery.js';
-import { useProductsQuery } from '../hooks/data/useProductsQuery.js';
-import { useDebounce } from '../hooks/useDebounce';
-import { usePageTitle } from '../hooks/usePageTitle';
+import { Container } from "@mui/material";
+import { useFormik } from "formik";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { getProductsByCategories } from "../api/client";
+import Filters from "../components/Filters";
+import LoadingSpinner from "../components/LoadingSpinner";
+import Products from "../components/Products";
+import Search from "../components/Search";
+import { useCategoriesQuery } from "../hooks/data/useCategoriesQuery.js";
+import { useProductsQuery } from "../hooks/data/useProductsQuery.js";
+import { useDebounce } from "../hooks/useDebounce";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export const HomePage = () => {
   // const navigate = useNavigate();
@@ -26,20 +26,20 @@ export const HomePage = () => {
   const [showedProducts, setShowedProducts] = useState([]);
 
   const {
-    category: categoryFromQuery = 'all',
+    category: categoryFromQuery = "all",
     ratingFilter: ratingFilterFromQuery = false,
-    minPrice: minPriceFromQuery = '',
-    maxPrice: maxPriceFromQuery = '',
-    search: searchFromQuery = '',
+    minPrice: minPriceFromQuery = "",
+    maxPrice: maxPriceFromQuery = "",
+    search: searchFromQuery = "",
   } = Object.fromEntries(queryParams.entries());
 
   const formik = useFormik({
     initialValues: {
-      category: categoryFromQuery !== null ? categoryFromQuery : 'all',
+      category: categoryFromQuery !== null ? categoryFromQuery : "all",
       ratingFilter: ratingFilterFromQuery === true,
-      minPrice: minPriceFromQuery !== null ? minPriceFromQuery : '',
-      maxPrice: maxPriceFromQuery !== null ? maxPriceFromQuery : '',
-      search: searchFromQuery !== null ? searchFromQuery : '',
+      minPrice: minPriceFromQuery !== null ? minPriceFromQuery : "",
+      maxPrice: maxPriceFromQuery !== null ? maxPriceFromQuery : "",
+      search: searchFromQuery !== null ? searchFromQuery : "",
     },
   });
 
@@ -73,15 +73,15 @@ export const HomePage = () => {
 
   useEffect(() => {
     const queryString = `${
-      values.category === 'all' ? '' : `category=${values.category}`
+      values.category === "all" ? "" : `category=${values.category}`
     }${
       values.ratingFilter === false
-        ? ''
+        ? ""
         : `&ratingFilter=${values.ratingFilter}`
-    }${values.minPrice === '' ? '' : `&minPrice=${values.minPrice}`}${
-      values.maxPrice === '' ? '' : `&maxPrice=${values.maxPrice}`
-    }${values.search.length === 0 ? '' : `&search=${values.search}`}`;
-    const url = queryString ? `/?${queryString}` : '/';
+    }${values.minPrice === "" ? "" : `&minPrice=${values.minPrice}`}${
+      values.maxPrice === "" ? "" : `&maxPrice=${values.maxPrice}`
+    }${values.search.length === 0 ? "" : `&search=${values.search}`}`;
+    const url = queryString ? `/?${queryString}` : "/";
 
     window.history.pushState(null, null, url);
   }, [
@@ -92,13 +92,7 @@ export const HomePage = () => {
     values.search,
   ]);
 
-  if (
-    !products ||
-    isProductsLoading ||
-    !categories ||
-    isCategoriesLoading ||
-    showedProducts.length === 0
-  )
+  if (!products || isProductsLoading || !categories || isCategoriesLoading)
     return <LoadingSpinner />;
 
   return (
