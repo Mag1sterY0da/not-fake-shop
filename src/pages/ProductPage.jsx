@@ -46,7 +46,7 @@ const ProductPage = () => {
   if (!prod || isLoading) return <LoadingSpinner />;
 
   return (
-    <Container maxWidth='xl' sx={{ height: "calc(100vh - 64px)" }}>
+    <Container maxWidth='xl'>
       <Box
         sx={{
           display: "flex",
@@ -54,8 +54,9 @@ const ProductPage = () => {
           justifyContent: "space-around",
           my: { md: "auto" },
           height: "90%",
-          flexDirection: { sm: "column", md: "row" },
+          flexDirection: { xs: "column", sm: "column", md: "row" },
           gap: "2rem",
+          mt: { xs: "4rem", sm: "4rem", md: "0" },
         }}
       >
         <Box sx={{ flex: "1", mx: 2, width: "100%" }}>
@@ -165,7 +166,7 @@ const ProductPage = () => {
           </Card>
         </Box>
       </Box>
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
+      <Box sx={{ display: "flex", justifyContent: "center", my: "4.8rem" }}>
         <IconButton onClick={() => navigate("/")} sx={{ mt: 2 }}>
           <ArrowBackIos /> Continue Shopping
         </IconButton>
