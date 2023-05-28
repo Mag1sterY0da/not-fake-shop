@@ -9,6 +9,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import Products from '../components/Products';
 import Search from '../components/Search';
 import { useCategoriesQuery } from '../hooks/data/useCategoriesQuery.js';
+import { useProductsByCategoryQuery } from '../hooks/data/useProductsQuery';
 import { useDebounce } from '../hooks/useDebounce';
 import { usePageTitle } from '../hooks/usePageTitle';
 
@@ -33,6 +34,21 @@ export const HomePage = () => {
     maxPrice: maxPriceFromQuery = '',
     search: searchFromQuery = '',
   } = queryParamsData;
+
+  const { data: products, isLoading: isProductsLoading } =
+    useProductsByCategoryQuery(
+      categoryFromQuery,
+      ratingFilterFromQuery,
+      minPriceFromQuery,
+      maxPriceFromQuery,
+      searchFromQuery
+    );
+
+  useEffect(() => {
+    if (products) {
+      setShowedProducts(products);
+    }
+  }, [products]);
 
   const formik = useFormik({
     initialValues: {
@@ -83,25 +99,6 @@ export const HomePage = () => {
 
   const { values, handleChange, handleSubmit } = formik;
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const products = await getProductsByCategories(
-          values.category,
-          values.ratingFilter,
-          values.minPrice,
-          values.maxPrice,
-          debouncedSearch
-        );
-
-        setShowedProducts(products);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const debouncedSearch = useDebounce(values.search, 0);
 
   const setScrollPosition = useCallback(() => {
@@ -121,7 +118,8 @@ export const HomePage = () => {
     }
   }, [showedProducts]);
 
-  if (!categories || isCategoriesLoading) return <LoadingSpinner />;
+  if (!categories || isCategoriesLoading || isProductsLoading)
+    return <LoadingSpinner />;
 
   return (
     <Container maxWidth='xl'>
@@ -139,29 +137,32 @@ export const HomePage = () => {
         handleChange={handleChange}
         handleSubmit={handleSubmit}
       />
-      {(showedProducts.length !== 0 && (
+      {showedProducts.length !== 0 && (
         <Products
           products={showedProducts}
           setScrollPosition={setScrollPosition}
         />
-      )) || (
-        <Container maxWidth='md'>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '1.2rem',
-              my: '2.4rem',
-            }}
-          >
-            <Typography variant='h6' sx={{ textAlign: 'center' }}>
-              No products found
-            </Typography>
-            <SentimentDissatisfied fontSize='large' />
-          </Box>
-        </Container>
       )}
+      {showedProducts.length === 0 &&
+        products.length === 0 &&
+        !isProductsLoading && (
+          <Container maxWidth='md'>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '1.2rem',
+                my: '2.4rem',
+              }}
+            >
+              <Typography variant='h6' sx={{ textAlign: 'center' }}>
+                No products found
+              </Typography>
+              <SentimentDissatisfied fontSize='large' />
+            </Box>
+          </Container>
+        )}
     </Container>
   );
 };
