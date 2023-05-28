@@ -1,6 +1,7 @@
-import { Container } from '@mui/material';
+import { SentimentDissatisfied } from '@mui/icons-material';
+import { Box, Container, Typography } from '@mui/material';
 import { useFormik } from 'formik';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { getProductsByCategories } from '../api/client';
 import Filters from '../components/Filters';
@@ -8,22 +9,22 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import Products from '../components/Products';
 import Search from '../components/Search';
 import { useCategoriesQuery } from '../hooks/data/useCategoriesQuery.js';
-import { useProductsQuery } from '../hooks/data/useProductsQuery.js';
 import { useDebounce } from '../hooks/useDebounce';
 import { usePageTitle } from '../hooks/usePageTitle';
 
 export const HomePage = () => {
-  // const navigate = useNavigate();
-
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
   usePageTitle();
 
-  const { data: products, isLoading: isProductsLoading } = useProductsQuery();
   const { data: categories, isLoading: isCategoriesLoading } =
     useCategoriesQuery();
 
   const [showedProducts, setShowedProducts] = useState([]);
+
+  const queryParamsData = useMemo(() => {
+    const queryParams = new URLSearchParams(location.search);
+    return Object.fromEntries(queryParams.entries());
+  }, [location.search]);
 
   const {
     category: categoryFromQuery = 'all',
@@ -31,21 +32,56 @@ export const HomePage = () => {
     minPrice: minPriceFromQuery = '',
     maxPrice: maxPriceFromQuery = '',
     search: searchFromQuery = '',
-  } = Object.fromEntries(queryParams.entries());
+  } = queryParamsData;
 
   const formik = useFormik({
     initialValues: {
       category: categoryFromQuery !== null ? categoryFromQuery : 'all',
-      ratingFilter: ratingFilterFromQuery === true,
+      ratingFilter: Boolean(ratingFilterFromQuery),
       minPrice: minPriceFromQuery !== null ? minPriceFromQuery : '',
       maxPrice: maxPriceFromQuery !== null ? maxPriceFromQuery : '',
       search: searchFromQuery !== null ? searchFromQuery : '',
     },
+    onSubmit: async (values) => {
+      try {
+        const products = await getProductsByCategories(
+          values.category,
+          values.ratingFilter,
+          values.minPrice,
+          values.maxPrice,
+          debouncedSearch
+        );
+
+        if (products !== showedProducts) {
+          setShowedProducts(products);
+
+          const queryString = `${
+            values.category === 'all' ? '' : `category=${values.category}`
+          }${
+            values.ratingFilter === false
+              ? ''
+              : `&ratingFilter=${values.ratingFilter}`
+          }${values.minPrice === '' ? '' : `&minPrice=${values.minPrice}`}${
+            values.maxPrice === '' ? '' : `&maxPrice=${values.maxPrice}`
+          }${debouncedSearch.length === 0 ? '' : `&search=${debouncedSearch}`}`;
+          const url = queryString ? `/?${queryString}` : '/';
+
+          window.history.pushState(null, null, url);
+
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
+
+          setScrollPosition();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
   });
 
-  const { values, handleChange, onSubmit } = formik;
-
-  const debouncedSearch = useDebounce(values.search, 500);
+  const { values, handleChange, handleSubmit } = formik;
 
   useEffect(() => {
     (async () => {
@@ -63,38 +99,14 @@ export const HomePage = () => {
         console.log(error);
       }
     })();
-  }, [
-    debouncedSearch,
-    values.category,
-    values.ratingFilter,
-    values.minPrice,
-    values.maxPrice,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  useEffect(() => {
-    const queryString = `${
-      values.category === 'all' ? '' : `category=${values.category}`
-    }${
-      values.ratingFilter === false
-        ? ''
-        : `&ratingFilter=${values.ratingFilter}`
-    }${values.minPrice === '' ? '' : `&minPrice=${values.minPrice}`}${
-      values.maxPrice === '' ? '' : `&maxPrice=${values.maxPrice}`
-    }${values.search.length === 0 ? '' : `&search=${values.search}`}`;
-    const url = queryString ? `/?${queryString}` : '/';
+  const debouncedSearch = useDebounce(values.search, 0);
 
-    window.history.pushState(null, null, url);
-  }, [
-    values.category,
-    values.maxPrice,
-    values.minPrice,
-    values.ratingFilter,
-    values.search,
-  ]);
-
-  const setScrollPosition = () => {
+  const setScrollPosition = useCallback(() => {
     sessionStorage.setItem('scrollPosition', window.scrollY);
-  };
+  }, []);
 
   useEffect(() => {
     if (showedProducts.length !== 0) {
@@ -102,41 +114,53 @@ export const HomePage = () => {
       const scrollPosition = savedScrollPosition
         ? parseInt(savedScrollPosition)
         : 0;
-      window.scrollTo(0, scrollPosition);
+      window.scrollTo({
+        top: scrollPosition,
+        behavior: 'smooth',
+      });
     }
   }, [showedProducts]);
 
-  if (
-    !products ||
-    isProductsLoading ||
-    !categories ||
-    isCategoriesLoading ||
-    showedProducts.length === 0
-  )
-    return <LoadingSpinner />;
+  if (!categories || isCategoriesLoading) return <LoadingSpinner />;
 
   return (
     <Container maxWidth='xl'>
-      {showedProducts.length !== 0 && (
-        <>
-          <Search
-            search={values.search}
-            handleChange={handleChange}
-            onSubmit={onSubmit}
-          />
-          <Filters
-            categories={categories}
-            minPrice={values.minPrice.toString()}
-            maxPrice={values.maxPrice.toString()}
-            category={values.category}
-            ratingFilter={values.ratingFilter}
-            handleChange={handleChange}
-          />
-          <Products
-            products={showedProducts}
-            setScrollPosition={setScrollPosition}
-          />
-        </>
+      <Search
+        search={values.search}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+      />
+      <Filters
+        categories={categories}
+        minPrice={values.minPrice.toString()}
+        maxPrice={values.maxPrice.toString()}
+        category={values.category}
+        ratingFilter={values.ratingFilter}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+      />
+      {(showedProducts.length !== 0 && (
+        <Products
+          products={showedProducts}
+          setScrollPosition={setScrollPosition}
+        />
+      )) || (
+        <Container maxWidth='md'>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '1.2rem',
+              my: '2.4rem',
+            }}
+          >
+            <Typography variant='h6' sx={{ textAlign: 'center' }}>
+              No products found
+            </Typography>
+            <SentimentDissatisfied fontSize='large' />
+          </Box>
+        </Container>
       )}
     </Container>
   );

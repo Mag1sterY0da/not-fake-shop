@@ -21,7 +21,7 @@ const PriceInput = memo(({ label, value, placeholder, handleChange }) => {
           onChange={handleChange}
           InputProps={{
             endAdornment: (
-              <InputAdornment position='start'>
+              <InputAdornment position='end'>
                 <IconButton>
                   <AttachMoney />
                 </IconButton>

@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton';
 import PropTypes from 'prop-types';
 import { memo } from 'react';
 
-const Search = memo(({ search, handleChange }) => {
+const Search = memo(({ search, handleChange, handleSubmit }) => {
   return (
     <Box sx={{ mt: '1.2rem' }}>
       <TextField
@@ -19,7 +19,7 @@ const Search = memo(({ search, handleChange }) => {
         InputProps={{
           endAdornment: (
             <InputAdornment position='end'>
-              <IconButton>
+              <IconButton onClick={handleSubmit}>
                 <SearchIcon />
               </IconButton>
             </InputAdornment>
@@ -33,6 +33,7 @@ const Search = memo(({ search, handleChange }) => {
 Search.propTypes = {
   search: PropTypes.string,
   handleChange: PropTypes.func,
+  handleSubmit: PropTypes.func,
 };
 
 Search.displayName = 'Search';

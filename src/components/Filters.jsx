@@ -1,3 +1,4 @@
+import { Button } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
 import { memo } from 'react';
@@ -13,9 +14,10 @@ const Filters = memo(
     category,
     ratingFilter,
     handleChange,
+    handleSubmit,
   }) => {
     return (
-      <Grid container spacing={3} alignItems='center' sx={{ mt: '1.2rem' }}>
+      <Grid container spacing={3} alignItems='center' sx={{ mt: '0.3rem' }}>
         <PriceInput
           label='Min Price'
           placeholder='Min price'
@@ -37,6 +39,11 @@ const Filters = memo(
           ratingFilter={ratingFilter}
           handleChange={handleChange('ratingFilter')}
         />
+        <Grid item xs={12}>
+          <Button variant='outlined' onClick={handleSubmit} fullWidth>
+            Search
+          </Button>
+        </Grid>
       </Grid>
     );
   }
@@ -49,6 +56,7 @@ Filters.propTypes = {
   category: PropTypes.string,
   ratingFilter: PropTypes.bool,
   handleChange: PropTypes.func,
+  handleSubmit: PropTypes.func,
 };
 
 Filters.displayName = 'Filters';
